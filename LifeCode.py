@@ -112,10 +112,15 @@ class LifeCode():
     def countStrokes(self,chinese):
         '''利用爬虫得到输入汉字的笔画数'''
         url='https://bihua.911cha.com/'
-        data={'q':chinese}
         headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
-         }
+        }
+        #get cookies
+        cookies=requests.get(url=url,headers=headers).cookies
+        headers['Cookie']=f"t={cookies['token']};r={int(cookies['secret'])-100}"
+
+        data={'q':chinese}
+
         response=requests.post(url=url,headers=headers,data=data)
         status=response.status_code
         stroke=0
